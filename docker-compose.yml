@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  movie-api:
+    build: ./app
+    container_name: movie-api
+    volumes:
+    - "/app"
+    working_dir: /app
+    ports:
+    - 3030:3030
+    networks:
+    - appnet
+    command: npm run start
+    restart: unless-stopped
+
+  movie-list-service:
+    build: microservices/movie-list
+    container_name: movie-list-service
+    volumes:
+    - "/app"
+    - "./db:/app/db"
+    working_dir: /app
+    networks:
+      - appnet
+    command: npm run start
+    restart: unless-stopped
+
+  movie-details-service:
+    build: microservices/movie-details
+    container_name: movie-details-service
+    volumes:
+    - "/app"
+    - "./db:/app/db"
+    working_dir: /app
+    networks:
+      - appnet
+    command: npm run start
+    restart: unless-stopped
+
+networks:
+  appnet:
+    internal: false
